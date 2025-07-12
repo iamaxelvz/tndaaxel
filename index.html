@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AxelShop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2845d7;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .products {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .product {
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 15px;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .product button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #cart {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .cart-item button {
+      background-color: red;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .btn-finalizar {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🛍️ AxelShop</h1>
+
+  <div class="products">
+    <div class="product">
+      <img src="p22.png" alt="AIRPORDS PRO 2 GEN">
+      <h3>AIRPODS PRO 2 GEN</h3>
+      <p>$500 MXN</p>
+      <button onclick="addToCart('AIRPODS PRO 2 GEN', 500)">Agregar al carrito</button>
+    </div>
+    <div class="product">
+      <img src="gorras.png" alt="Gorras"  width="200" height="150" >
+      <h3>Gorras</h3>
+      <p>$250MXN, 2x400MXN</p>
+      <button onclick="addToCart('Gorras', 250)">Agregar al carrito</button>
+    </div>
+    <div class="product">
+      <img src="VAPES.png" alt="VAPES BUGGATTI "  width="200" height="150">
+      <h3>VAPES BUGGATTI 7K HITS tropical mango y doble menta</h3>
+      <p>$350MXN</p>
+      <button onclick="addToCart('VAPE BUGGATTI', 350)">Agregar al carrito</button>
+    </div>
+	<div class="product">
+    <img src="airpods.png" alt="VAPES MOTI "  width="200" height="150">
+      <h3>VAPES MOTI 2K HITS vainilla </h3>
+      <p>$150MXN</p>
+      <button onclick="addToCart('VAPE MOTI', 150)">Agregar al carrito</button>
+    </div>
+  </div>
+
+  <div id="cart">
+    <h2>🛒 Carrito de compras</h2>
+    <div id="cart-items"></div>
+    <p><strong>Total:</strong> $<span id="total">0</span> MXN</p>
+    <button class="btn-finalizar" onclick="sendToWhatsApp()">Finalizar compra por WhatsApp</button>
+  </div>
+
+  <script>
+    let cart = [];
+    let total = 0;
+
+    function addToCart(product, price) {
+      cart.push({ product, price });
+      updateCart();
+    }
+
+    function removeFromCart(index) {
+      total -= cart[index].price;
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      cartItems.innerHTML = '';
+      total = 0;
+
+      cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          ${item.product} - $${item.price} MXN
+          <button onclick="removeFromCart(${index})">X</button>
+        `;
+        cartItems.appendChild(div);
+      });
+
+      document.getElementById('total').textContent = total;
+    }
+
+    function sendToWhatsApp() {
+      if (cart.length === 0) {
+        alert("Tu carrito está vacío.");
+        return;
+      }
+
+      let message = "Hola, quiero comprar:\n";
+      cart.forEach(item => {
+        message += `- ${item.product}: $${item.price} MXN\n`;
+      });
+      message += `Total: $${total} MXN`;
+
+      // REEMPLAZA ESTE NÚMERO POR EL TUYO, SIN EL "+" PERO CON CÓDIGO DE PAÍS (ej: 52 para México)
+      const phoneNumber = "524499909106";
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+  </script>
+
+</body>
+</html>
+
